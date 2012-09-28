@@ -4,7 +4,7 @@ if [ "$CPU_JOB_NUM" = "" ] ; then
 	CPU_JOB_NUM=`grep -c processor /proc/cpuinfo`
 fi
 
-CUSTOMVERSION="SimplyCM10-v1"
+CUSTOMVERSION="SimplyCM10-vc-v1"
 export KBUILD_BUILD_VERSION=$CUSTOMVERSION
 LOCALVERSION_STRING="-$CUSTOMVERSION"
 DEFCONFIG_STRING=cyanogenmod_epicmtd_defconfig
