@@ -15,6 +15,7 @@ TOOLCHAIN_PREFIX=arm-eabi-
 PRJROOT=$PWD
 KERNEL_BUILD_DIR=$PRJROOT/kernel
 ZIP_BUILD_DIR=$PRJROOT/zip
+KEXEC_BUILD_DIR=$PRJROOT/kexec-zip
 
 case "$1" in
 	clean)
@@ -56,7 +57,14 @@ case "$1" in
 		zip -r $PRJROOT/$CUSTOMVERSION.zip ./*
 		popd
 		;;
+	kexec-zip)
+		pushd $KEXEC_BUILD_DIR
+		cp $KERNEL_BUILD_DIR/arch/arm/boot/zImage $KEXEC_BUILD_DIR
+		rm $PRJROOT/$CUSTOMVERSION-kexec.zip
+		zip -r $PRJROOT/$CUSTOMVERSION-kexec.zip ./*
+		popd
+		;;
 	*)
-		echo "usage: [build|zip|clean|mrproper|distclean]"
+		echo "usage: [build|zip|clean|mrproper|distclean|kexec-zip]"
 		;;
 esac

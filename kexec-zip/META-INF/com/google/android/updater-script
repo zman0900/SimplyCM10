@@ -1,0 +1,53 @@
+show_progress(1.0, 0);
+
+ui_print("Create mount symlink.");
+run_program("/sbin/ln",       "-s", "/sbin/mount",       "/tmp/mount");
+run_program("/system/bin/ln", "-s", "/system/bin/mount", "/tmp/mount");
+set_progress(0.1);
+
+ui_print("Remount partitions read-only.");
+run_program("/tmp/mount", "-ro", "remount", "", "/mnt/.lfs");
+run_program("/tmp/mount", "-ro", "remount", "", "/system");
+run_program("/tmp/mount", "-ro", "remount", "", "/data");
+run_program("/tmp/mount", "-ro", "remount", "", "/cache");
+set_progress(0.2);
+
+ui_print("(Re)mount /sdcard read-only.");
+run_program("/tmp/mount", "-ro", "remount", "", "/sdcard");
+run_program("/tmp/mount", "-rt", "vfat", "/dev/block/mmcblk0p1", "/sdcard");
+set_progress(0.3);
+
+ui_print("Unpack tools");
+package_extract_file("kexec", "/tmp/kexec");
+set_perm(0, 0, 0755, "/tmp/kexec");
+package_extract_file("bml_over_mtd", "/tmp/bml_over_mtd");
+set_perm(0, 0, 0755, "/tmp/bml_over_mtd");
+package_extract_file("busybox", "/tmp/busybox");
+set_perm(0, 0, 0755, "/tmp/busybox");
+package_extract_file("extract_ramdisk.sh", "/tmp/extract_ramdisk.sh");
+set_perm(0, 0, 0755, "/tmp/extract_ramdisk.sh");
+set_progress(0.4);
+
+ui_print("Unpack kernel");
+package_extract_file("zImage", "/tmp/zImage");
+set_perm(0, 0, 0755, "/tmp/zImage");
+set_progress(0.5);
+
+ui_print("Extract ramdisk");
+run_program("/tmp/extract_ramdisk.sh");
+set_progress(0.7);
+
+ui_print("Load zImage with boot.cpio.gz.");
+run_program("/tmp/kexec", "--load-hardboot", "--mem-min=0x50000000",
+            "--append=console=ttyFIQ0 loglevel=4",
+            "--initrd=/tmp/boot.cpio.gz",
+            "/tmp/zImage");
+set_progress(0.8);
+
+ui_print("Sync.");
+run_program("/sbin/sync");
+run_program("/system/bin/sync");
+set_progress(1.0);
+
+ui_print("Reboot into zImage.");
+run_program("/tmp/kexec", "-e");
