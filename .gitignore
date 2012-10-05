@@ -2,3 +2,5 @@
 *.zip
 zip/zImage
 zip/system
+kexec-zip/zImage
+kexec-zip/system
