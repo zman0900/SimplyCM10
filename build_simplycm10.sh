@@ -9,7 +9,7 @@ export KBUILD_BUILD_VERSION=$CUSTOMVERSION
 LOCALVERSION_STRING="-$CUSTOMVERSION"
 DEFCONFIG_STRING=cyanogenmod_epicmtd_defconfig
 
-TOOLCHAIN=/mnt/data/linaro-android-eabi-1209/bin
+TOOLCHAIN=/mnt/data/android-toolchain-eabi-4.7-2013.06-x86/bin
 TOOLCHAIN_PREFIX=arm-eabi-
 
 PRJROOT=$PWD
